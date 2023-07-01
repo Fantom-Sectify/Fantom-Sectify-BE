@@ -8,7 +8,7 @@ import {sendEmail} from "../utils/sendEmail.js";
 
 
 export const userRegisterController = async(req, res) => {
-    const {fullname, profilephoto, phoneNumber, password} =req.body;
+    const {fullname, profilephoto, email, phoneNumber, password} =req.body;
     const foundUser = await User.findOne({phoneNumber});
     try{
         if(foundUser){
@@ -26,7 +26,8 @@ export const userRegisterController = async(req, res) => {
         const user = await User.create({
             fullname,
             VIN,
-            phoneNumber, 
+            phoneNumber,
+            email, 
             password: hashPassword,
             profilephoto
         })
