@@ -12,7 +12,7 @@ const userSchema = new mongoose.Schema({
         type:String,
     },
     VIN: {
-        type:Number,
+        type:String,
         required:[true, "VIN is needed"]
     },
     phoneNumber: {

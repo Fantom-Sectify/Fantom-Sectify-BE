@@ -23,7 +23,13 @@ export const sendEmail = async (to, VIN) => {
     from: process.env.EMAIL_USERNAME,
     to: to,
     subject: "VOTERS IDENTIFICATION NUMBER",
-    text: `Your VIN is: ${VIN}`,
+    text: `Hi ${to},\n
+    We received your request for a Voters Identification Number to use with your Sectify.\n
+    Your VIN is ${VIN}.\n
+    If you didn't request this code, you can safely ignore this email. Someone else might have typed your email address by mistake.\n
+    Vote wisely.\n
+    Thanks,\n
+    The Fantom Sectify Team\n`,
   };
 
   try {

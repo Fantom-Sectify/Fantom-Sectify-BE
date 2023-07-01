@@ -39,7 +39,7 @@ export const userRegisterController = async(req, res) => {
 
         
         setTimeout(() => {
-            sendEmail(user.email, user.VIN);
+            sendEmail(email, VIN);
         }, 1500); // 15sec in milliseconds
         }
 
