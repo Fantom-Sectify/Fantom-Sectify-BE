@@ -1,13 +1,15 @@
 import User from "../models/userModel.js";
 import bcrypt from "bcrypt";
 import generateToken from "../utils/generateToken.js";
+import {generateRandomAlphaNumeric }from "../utils/generateRandomVIN.js";
+import {sendEmail} from "../utils/sendEmail.js";
 // import obtainTokenFromHeader from "../util/obtaintokenfromheader.js";
 
 
 
 export const userRegisterController = async(req, res) => {
-    const {fullname, profilephoto, country, email, password} =req.body;
-    const foundUser = await User.findOne({email});
+    const {fullname, profilephoto, phoneNumber, password} =req.body;
+    const foundUser = await User.findOne({phoneNumber});
     try{
         if(foundUser){
             res.json({
@@ -19,10 +21,12 @@ export const userRegisterController = async(req, res) => {
         const salt = await bcrypt.genSalt(10);
         const hashPassword = await bcrypt.hash(password, salt);
 
+        const VIN = await generateRandomAlphaNumeric(10);
+
         const user = await User.create({
             fullname,
-            country, 
-            email, 
+            VIN,
+            phoneNumber, 
             password: hashPassword,
             profilephoto
         })
@@ -31,7 +35,13 @@ export const userRegisterController = async(req, res) => {
             status: "success",
             data: user
         });
+
+        
+        setTimeout(() => {
+            sendEmail(user.email, user.VIN);
+        }, 1500); // 15sec in milliseconds
         }
+
     }catch(error){
         res.json(error.message)
     }
@@ -39,15 +49,23 @@ export const userRegisterController = async(req, res) => {
 
 //login user
 export const userLoginController = async(req, res) => {
-    const {email, password} = req.body;
+    const {VIN, phoneNumber, password} = req.body;
     // console.log(req.headers);
     
     try{
-        const foundUser = await User.findOne({email});
+        const foundUser = await User.findOne({VIN});
         if(!foundUser){
             return res.json({
                 status: "error",
                 message: "Wrong login details"
+            });
+        }
+
+        const foundUserNumber = await User.findOne({phoneNumber});
+        if(!foundUserNumber){
+            return res.json({
+                status: "error",
+                message: "Wrong login detailsw"
             });
         }
 
@@ -62,8 +80,9 @@ export const userLoginController = async(req, res) => {
                 status: "success",
                 // data: "Your details has successfully logged in"
                 data: {
+                    VIN: foundUser.VIN,
                     fullname: foundUser.fullname,
-                    email: foundUser.email,
+                    phoneNumber: foundUser.phoneNumber,
                     token: generateToken(foundUser._id)
                 }
             });
@@ -110,16 +129,7 @@ export const getSpecificUser = async(req, res) => {
     }
 }
 
-export const updateUser = async(req, res) => {
-    try{
-        res.json({
-            status: "success",
-            data: "user details updated"
-        });
-    }catch(error){
-        res.json(error.message)
-    }
-}
+
 
 export const profilePhotoUploadController = async(req, res) => {
     // console.log(req.file);
@@ -155,13 +165,3 @@ export const profilePhotoUploadController = async(req, res) => {
     }
 }
 
-
-export const deleteUser = async(req, res) => {
-    try{
-        res.json({
-            status: "user deleted"
-        });
-    }catch(error){
-        res.json(error.message)
-    }
-}

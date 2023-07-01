@@ -22,10 +22,10 @@ app.use("/api/v1/users", userRoutes);
 
 
 //login
-app.use("/api/v1/users/login", userRoutes);
+app.use("/api/v1/users/signin", userRoutes);
 
 //register
-app.use("/api/v1/users/register", userRoutes);
+app.use("/api/v1/users/signup", userRoutes);
 
 
 

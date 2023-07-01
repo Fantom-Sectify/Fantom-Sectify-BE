@@ -1,5 +1,5 @@
 import express  from "express";
-import { deleteUser, getSpecificUser, displayAllUsers, userLoginController, userRegisterController, updateUser } from "../controllers/userController.js";
+import { getSpecificUser, displayAllUsers, userLoginController, userRegisterController } from "../controllers/userController.js";
 import isLogin from "../middleware/isLogin.js";
 
 
@@ -9,10 +9,10 @@ const userRouters = express.Router();
 
 
 // Register User
-userRouters.post("/register", userRegisterController)
+userRouters.post("/signup", userRegisterController)
 
 // Login user
-userRouters.post("/loginin", userLoginController)
+userRouters.post("/signin", userLoginController)
 
 // get all users from
 userRouters.get("", displayAllUsers)
@@ -21,10 +21,10 @@ userRouters.get("", displayAllUsers)
 userRouters.get("/profile/",isLogin, getSpecificUser)
 
 // delete user
-userRouters.put("/:id", deleteUser)
+// userRouters.put("/:id", deleteUser)
 
 // update user
-userRouters.put("/:id", updateUser)
+// userRouters.put("/:id", updateUser)
 
 // userRouters.post("/profile-image",isLogin, upload.single("profile"), profilePhotoUploadController )
 

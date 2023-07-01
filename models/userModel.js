@@ -8,22 +8,17 @@ const userSchema = new mongoose.Schema({
     profilephoto: {
         type:String,
     },
-    email: {
-        type:String,
-        required:[true, "Email is needed"]
+    VIN: {
+        type:Number,
+        required:[true, "VIN is needed"]
+    },
+    phoneNumber: {
+        type:Number,
+        required:[true, "Phone number is needed"]
     },
     password: {
         type:String,
         required:[true, "password is needed"]
-    },
-    country: {
-        type:String,
-        required:[true, "country is needed"],
-        default:"Nigeria"
-    },
-    isBlocked: {
-        type:Boolean,
-        default:false
     },
     isAdmin: {
         type:Boolean,
