@@ -10,6 +10,7 @@ const userSchema = new mongoose.Schema({
     },
     profilephoto: {
         type:String,
+        default: "https://source.unsplash.com/80x80/?portrait?2"
     },
     VIN: {
         type:String,
