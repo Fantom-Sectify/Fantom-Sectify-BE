@@ -1,9 +1,10 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.17;
+pragma solidity ^0.8.18;
 
 contract Sectify {
-    // /////////////TESTNET CONTRACT ADDRESS==autor:Oji>>[mobile:+2348033130603]////////////////////////
-    // ============0xc2e9Ac0a04cd6cdB631B205e039e5894967c77eA=========
+    // ============fantom mainnet contract addr====================
+    // ---------Autor:Oji----mobile:+2348033130603=====github:ojiubasi-motif=======
+    // ============0xdf00Aa8942Dc6B5405C6a35A6136D9087b250072=========
     address immutable umpire;
     uint256 startDate; //when will election start
     uint256 duration; //how long will voting last
@@ -83,18 +84,27 @@ contract Sectify {
 
     // /////get a candidate registered//////////
     function registerCandidate(uint256 _id, Office _vyingFor) public {
+        // require(elecetionScheduled[_office], "election timetable has not been set, contact the umpire");  
+        require(
+            scheduleDetails[_vyingFor].votingStarts > block.timestamp,
+            "Accreditation is closed, voting has started"
+        );
+        require(msg.sender != umpire,"You're the umpire, you're not allowed to contest");
+        require(!hasRegistered[_id], "please this Candidate has been accredited, contact admin for change of data");
+
         require(
             scheduleDetails[_vyingFor].votingStarts > block.timestamp,
             "registration is closed, voting has started"
         );
         require(msg.sender != address(0), "candidate address is invalid");
 
-        if (hasRegistered[_id]) {
-            Candidate storage _candidateDetails = candidateDetails[_id];
-            // if you have registered, you're only allowed to edit your address and office-of-choice
-            _candidateDetails.candidateAddress = msg.sender;
-            _candidateDetails.officeOfChoice = _vyingFor;
-        } else {
+        // if (hasRegistered[_id]) {
+        //     Candidate storage _candidateDetails = candidateDetails[_id];
+        //     // if you have registered, you're only allowed to edit your address and office-of-choice
+        //     _candidateDetails.candidateAddress = msg.sender;
+        //     _candidateDetails.officeOfChoice = _vyingFor;
+        // } else {
+            
             candidateDetails[_id] = Candidate({
                 candidateId: _id,
                 candidateAddress: msg.sender,
@@ -103,9 +113,9 @@ contract Sectify {
                 verificationStatus: Verify.nill
             });
             allCandidates.push(_id);
+            hasRegistered[_id] = true;
             //for easy collation of result
-            allCandidatesByOffice[_vyingFor].push(_id);
-        }
+            allCandidatesByOffice[_vyingFor].push(_id);        
     }
 
     function verifyCandidate(uint256 _candidateId) public OnlyUmpire {
@@ -257,7 +267,7 @@ contract Sectify {
     }
 
     function collatePollResults(Office _office)
-        internal
+        public
         ElectionIsOver(_office)
     {
         uint256[] memory _allCandidates = allCandidatesByOffice[_office];
