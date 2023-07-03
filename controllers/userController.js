@@ -54,21 +54,29 @@ export const userLoginController = async(req, res) => {
     // console.log(req.headers);
     
     try{
-        const foundUser = await User.findOne({VIN});
-        if(!foundUser){
-            return res.json({
-                status: "error",
-                message: "Wrong login details"
-            });
+        const foundUser = await User.findOne({ $and: [{ VIN }, { phoneNumber }] });
+        if (!foundUser) {
+          return res.json({
+            status: "error",
+            message: "Wrong login details",
+          });
         }
 
-        const foundUserNumber = await User.findOne({phoneNumber});
-        if(!foundUserNumber){
-            return res.json({
-                status: "error",
-                message: "Wrong login detailsw"
-            });
-        }
+        // const foundUser = await User.findOne({VIN});
+        // if(!foundUser){
+        //     return res.json({
+        //         status: "error",
+        //         message: "Wrong login details"
+        //     });
+        // }
+
+        // const foundUserNumber = await User.findOne({phoneNumber});
+        // if(!foundUserNumber){
+        //     return res.json({
+        //         status: "error",
+        //         message: "Wrong login detailsw"
+        //     });
+        // }
 
         const userPassword = await bcrypt.compare(password, foundUser.password);
         if(!userPassword){
