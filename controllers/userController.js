@@ -21,7 +21,8 @@ export const userRegisterController = async(req, res) => {
         const salt = await bcrypt.genSalt(10);
         const hashPassword = await bcrypt.hash(password, salt);
 
-        const VIN = await generateRandomAlphaNumeric(10);
+        // const VIN = await generateRandomAlphaNumeric(10);
+        const VIN = 3785;
 
         const user = await User.create({
             fullname,
